@@ -1,0 +1,6 @@
+{
+  "name": "Market Report PDF Generator",
+  "description": "An application to generate a stylish, multi-page financial market report PDF based on provided data, with a visual style inspired by a friendly, modern design.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

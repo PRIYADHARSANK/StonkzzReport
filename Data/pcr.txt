@@ -1,0 +1,6 @@
+NIFTY PCR Analysis
+========================================
+
+Current PCR (04-07-2025): 0.86
+Total Put OI: 3,639,635
+Total Call OI: 4,246,040
