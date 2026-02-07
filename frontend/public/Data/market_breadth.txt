@@ -1,0 +1,4 @@
+Advances: 19
+Declines: 27
+Unchanged: 0
+Bias: Bearish

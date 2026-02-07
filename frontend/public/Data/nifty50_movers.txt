@@ -1,0 +1,19 @@
+Top 5 Gainers:
+====
+Name Value Change
+----
+LICI 901.85 +7.40%
+ITC 325.80 +5.03%
+KOTAKBANK 422.35 +3.33%
+HINDUNILVR 2424.20 +2.96%
+BHARTIARTL 2038.40 +2.31%
+
+Top 5 Losers:
+====
+Name Value Change
+----
+HDFCLIFE 703.50 -2.39%
+DIVISLAB 6024.50 -1.91%
+TCS 2941.60 -1.67%
+TECHM 1619.90 -1.60%
+ASIANPAINT 2401.10 -1.27%

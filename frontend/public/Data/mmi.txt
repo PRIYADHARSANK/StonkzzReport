@@ -1,0 +1,4 @@
+Current MMI = 52.0
+Change in MMI from 51.0
+Change in Nifty = +50.90 (+0.20%)
+Zone Analysis: Market sentiment is in Neutral zone 😐 (MMI: 51.98) (remains in Neutral with slight improvement)

@@ -1,0 +1,17 @@
+Spot Price: 25665.6
+Total Call OI: 2232165
+Total Put OI: 1516864
+
+[Resistance Levels] (Call OI)
+Strike: 26000 | OI: 196390
+Strike: 27000 | OI: 146518
+Strike: 25800 | OI: 133186
+Strike: 26500 | OI: 121833
+Strike: 26200 | OI: 107787
+
+[Support Levels] (Put OI)
+Strike: 24500 | OI: 137618
+Strike: 25000 | OI: 118540
+Strike: 24000 | OI: 103022
+Strike: 25500 | OI: 73637
+Strike: 25600 | OI: 70297

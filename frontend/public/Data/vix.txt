@@ -1,0 +1,7 @@
+Current Value: 11.94
+Change: -0.23
+# Source: Yahoo Finance
+# Confidence: HIGH
+# Timestamp: 2026-02-06 00:00:00+05:30
+# Validated: True
+# Sources: 2

@@ -1,6 +1,0 @@
-NIFTY OPEN INTEREST ANALYSIS
-==================================================
-
-Spot Price:      25,405.30
-Total Call OI:   1,888.02 L
-Total Put OI:    1,401.97 L

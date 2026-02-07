@@ -1,0 +1,206 @@
+{
+  "summary": {
+    "spot": 25693.7,
+    "pcr": 0.858,
+    "call_oi": 3011098.0,
+    "put_oi": 2583541.0,
+    "support": 25500.0,
+    "resistance": 27000.0,
+    "timestamp": "Groww (2026-02-06 15:30:00)"
+  },
+  "analysis_points": [
+    "Current PCR is **0.858** with Total Put OI at **2,583,541.0** and Total Call OI at **3,011,098.0**.",
+    "The **0.858** overall PCR indicates **neutral** sentiment, while the intraday chart shows NIFTY50's **consolidation**, accompanied by the intraday PCR **declining from its morning peak**.",
+    "The market is expected to face strong resistance at the 27000.0 strike with a Call OI of 283910.0, indicating a potential hurdle for the bulls.",
+    "On the downside, the 25500.0 strike with a Put OI of 184817.0 is likely to act as a strong support level, providing a cushion for the market."
+  ],
+  "oi_chart_data": [
+    {
+      "strike": 24900.0,
+      "call_oi": 6338.0,
+      "put_oi": 48559.0
+    },
+    {
+      "strike": 25000.0,
+      "call_oi": 12739.0,
+      "put_oi": 156288.0
+    },
+    {
+      "strike": 25100.0,
+      "call_oi": 11930.0,
+      "put_oi": 76852.0
+    },
+    {
+      "strike": 25200.0,
+      "call_oi": 8043.0,
+      "put_oi": 80230.0
+    },
+    {
+      "strike": 25300.0,
+      "call_oi": 11921.0,
+      "put_oi": 79444.0
+    },
+    {
+      "strike": 25400.0,
+      "call_oi": 12042.0,
+      "put_oi": 106968.0
+    },
+    {
+      "strike": 25500.0,
+      "call_oi": 46797.0,
+      "put_oi": 184817.0
+    },
+    {
+      "strike": 25600.0,
+      "call_oi": 83677.0,
+      "put_oi": 154762.0
+    },
+    {
+      "strike": 25700.0,
+      "call_oi": 147109.0,
+      "put_oi": 77958.0
+    },
+    {
+      "strike": 25800.0,
+      "call_oi": 168838.0,
+      "put_oi": 52272.0
+    },
+    {
+      "strike": 25900.0,
+      "call_oi": 104194.0,
+      "put_oi": 8561.0
+    },
+    {
+      "strike": 26000.0,
+      "call_oi": 222476.0,
+      "put_oi": 20702.0
+    },
+    {
+      "strike": 26100.0,
+      "call_oi": 85104.0,
+      "put_oi": 4501.0
+    },
+    {
+      "strike": 26200.0,
+      "call_oi": 98567.0,
+      "put_oi": 4763.0
+    },
+    {
+      "strike": 26300.0,
+      "call_oi": 106797.0,
+      "put_oi": 2120.0
+    },
+    {
+      "strike": 26400.0,
+      "call_oi": 63992.0,
+      "put_oi": 687.0
+    },
+    {
+      "strike": 26500.0,
+      "call_oi": 147403.0,
+      "put_oi": 5840.0
+    }
+  ],
+  "pcr_trend_data": [
+    {
+      "time": "19:31:09",
+      "pcr": 0.5898,
+      "spot": 25048.65
+    },
+    {
+      "time": "21:59:56",
+      "pcr": 0.5898,
+      "spot": 25048.65
+    },
+    {
+      "time": "07:00:59",
+      "pcr": 0.5898,
+      "spot": 25048.65
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.5898,
+      "spot": 25048.65
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.5898,
+      "spot": 25048.65
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.5898,
+      "spot": 25048.65
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.5898,
+      "spot": 25048.65
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.5898,
+      "spot": 25048.65
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.5898,
+      "spot": 25048.65
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.5898,
+      "spot": 25048.65
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.8268,
+      "spot": 25342.75
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.8256,
+      "spot": 25342.75
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.7619,
+      "spot": 25320.65
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.9307,
+      "spot": 25088.4
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.9307,
+      "spot": 25088.4
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.9212,
+      "spot": 25727.55
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.9212,
+      "spot": 25727.55
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.9212,
+      "spot": 25727.55
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.8633,
+      "spot": 25693.7
+    },
+    {
+      "time": "15:30:00",
+      "pcr": 0.858,
+      "spot": 25693.7
+    }
+  ]
+}
