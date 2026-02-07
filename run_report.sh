@@ -20,7 +20,22 @@ fi
 
 cd ..
 
-# 2. Start the Frontend Server
-echo "Starting Report Frontend..."
-cd frontend
-npm run dev
+
+# 2. Start PDF Generation & Email (This will also handle the frontend server)
+echo "Starting PDF Generation and Email Service..."
+if [ -f "backend/venv/bin/python3" ]; then
+    backend/venv/bin/python3 generate_pdf_report.py
+else
+    echo "Virtual environment not found. Trying global python3..."
+    python3 generate_pdf_report.py
+fi
+
+# Check exit status
+if [ $? -ne 0 ]; then
+    echo "PDF Generation/Email failed!"
+    # Optional: Don't exit here if you want to keep the local server running for debugging
+fi
+
+# 3. Setup Complete
+echo "Process Complete! PDF generated and email sent (if enabled)."
+
