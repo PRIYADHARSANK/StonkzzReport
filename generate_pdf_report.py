@@ -243,8 +243,9 @@ class PDFReportGenerator:
                     page.wait_for_selector('.a4-page-container', timeout=120000)
                     print("✅ Report content loaded successfully")
                     
-                    # Additional small wait to ensure all styles and images are rendered
-                    time.sleep(2)
+                    # Wait for network to be idle (all API calls and images loaded)
+                    page.wait_for_load_state('networkidle', timeout=30000)
+                    print("✅ All resources loaded")
                     
                 except PlaywrightTimeout:
                     print("⚠️  Loading timeout - could not find report pages")
