@@ -51,7 +51,7 @@ jobs:
       # 7. Inject Secrets into .env file
       - name: Create Backend .env File
         run: |
-          echo "GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}" >> backend/.env
+          echo "GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}" > backend/.env
           echo "TWELVE_DATA_KEY=${{ secrets.TWELVE_DATA_KEY }}" >> backend/.env
           echo "NEWS_API_KEY=${{ secrets.NEWS_API_KEY }}" >> backend/.env
           echo "EMAIL_SENDER=${{ secrets.EMAIL_SENDER }}" >> backend/.env
@@ -59,19 +59,24 @@ jobs:
           echo "EMAIL_RECIPIENTS=${{ secrets.EMAIL_RECIPIENTS }}" >> backend/.env
           echo "EMAIL_ENABLED=true" >> backend/.env
 
-      # 8. Fetch Market Data
+      # 8. Inject GROQ_API_KEY for frontend Vite build
+      - name: Create Frontend .env File
+        run: |
+          echo "GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}" > frontend/.env
+
+      # 9. Fetch Market Data
       - name: Fetch Market Data
         run: |
           cd backend
           python fetch_data_v3.py
         continue-on-error: true  # Continue even if some data sources fail
 
-      # 9. Generate PDF Report and Send Email
+      # 10. Generate PDF Report and Send Email
       - name: Generate PDF and Send Email
         run: |
           python generate_pdf_report.py
 
-      # 10. Upload PDF as Artifact (Safety Net)
+      # 11. Upload PDF as Artifact (Safety Net)
       - name: Upload PDF Artifact
         uses: actions/upload-artifact@v4
         if: always()  # Upload even if previous steps fail
