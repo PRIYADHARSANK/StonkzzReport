@@ -238,51 +238,41 @@ class PDFReportGenerator:
                 # Wait for the loading to complete
                 print("⏳ Waiting for data to load...")
                 try:
-                    # Wait for loading spinner to disappear (max 60 seconds)
-                    # Adjust selector based on actual loading indicator in frontend
-                    # Using a generic approach: waiting for a known element to exist or loading to vanish
-                    time.sleep(5) # Initial wait
+                    # Wait for report pages to render (wait for .a4-page-container elements)
+                    # This selector indicates the report content has been rendered
+                    page.wait_for_selector('.a4-page-container', timeout=120000)
+                    print("✅ Report content loaded successfully")
                     
-                    # Try to wait for the date element which usually appears after load
-                    # page.wait_for_selector('.date-display', timeout=60000) 
-                    print("✅ Assuming data loaded successfully after wait")
-                except PlaywrightTimeout:
-                    print("⚠️  Loading timeout - proceeding anyway")
-                
-                # Additional wait for rendering
-                time.sleep(3)
-                
-                # Click the "Save as PDF" button
-                print("🖱️  Clicking 'Save as PDF' button...")
-                try:
-                    # Find and click the Save as PDF button
-                    # Look for button that contains "Save" or "PDF"
-                    pdf_button = page.locator('button:has-text("Save"), button:has-text("PDF")')
-                    if pdf_button.count() > 0:
-                         pdf_button = pdf_button.first
-                         pdf_button.wait_for(state='visible', timeout=10000)
-                         
-                         # Set up download listener before clicking
-                         with page.expect_download(timeout=120000) as download_info:
-                             pdf_button.click()
-                             print("⏳ Waiting for PDF generation...")
-                         
-                         download = download_info.value
-                         
-                         # Save the downloaded file
-                         timestamp = time.strftime("%Y%m%d_%H%M%S")
-                         pdf_filename = f"stonkzz-report_{timestamp}.pdf"
-                         self.pdf_path = os.path.join(self.download_dir, pdf_filename)
-                         
-                         download.save_as(self.pdf_path)
-                         print(f"✅ PDF saved to: {self.pdf_path}")
-                    else:
-                        print("❌ Could not find 'Save as PDF' button")
-                        return None
+                    # Wait for network to be idle (all API calls and images loaded)
+                    page.wait_for_load_state('networkidle', timeout=30000)
+                    print("✅ All resources loaded")
                     
                 except PlaywrightTimeout:
-                    print("❌ Timeout waiting for PDF download")
+                    print("⚠️  Loading timeout - could not find report pages")
                     return None
+                
+                # Generate PDF using Playwright's native pdf() method
+                print("📄 Generating PDF using Playwright...")
+                try:
+                    # Generate filename with timestamp
+                    timestamp = time.strftime("%Y%m%d_%H%M%S")
+                    pdf_filename = f"stonkzz-report_{timestamp}.pdf"
+                    self.pdf_path = os.path.join(self.download_dir, pdf_filename)
+                    
+                    # Use Playwright's native PDF generation (100% reliable in headless Chromium)
+                    page.pdf(
+                        path=self.pdf_path,
+                        format='A4',
+                        print_background=True,  # Preserve beige background (#FDF6E9)
+                        margin={
+                            'top': '0',
+                            'right': '0',
+                            'bottom': '0',
+                            'left': '0'
+                        }
+                    )
+                    print(f"✅ PDF saved to: {self.pdf_path}")
+                    
                 except Exception as e:
                     print(f"❌ Error during PDF generation: {e}")
                     return None

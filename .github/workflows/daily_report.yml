@@ -58,6 +58,7 @@ jobs:
           echo "EMAIL_APP_PASSWORD=${{ secrets.EMAIL_APP_PASSWORD }}" >> backend/.env
           echo "EMAIL_RECIPIENTS=${{ secrets.EMAIL_RECIPIENTS }}" >> backend/.env
           echo "EMAIL_ENABLED=true" >> backend/.env
+          echo "GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}" >> frontend/.env
 
       # 8. Fetch Market Data
       - name: Fetch Market Data
