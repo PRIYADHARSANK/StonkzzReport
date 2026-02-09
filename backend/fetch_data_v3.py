@@ -24,6 +24,63 @@ from scripts.market_utils import get_last_market_close, interpret_mmi
 # Load environment variables
 load_dotenv()
 
+# --- HELPER FUNCTIONS FOR ROBUST REQUESTS ---
+def get_browser_headers():
+    """Returns a robust set of browser-like headers to avoid bot detection."""
+    return {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Cache-Control': 'max-age=0',
+        # 'Referer': 'https://www.google.com/' # Generic referer
+    }
+
+def make_request_with_retries(url, headers=None, params=None, timeout=15, max_retries=3, referer=None):
+    """
+    Robust request maker with exponential backoff and status checking.
+    """
+    if headers is None:
+        headers = get_browser_headers()
+    
+    if referer:
+        headers['Referer'] = referer
+    
+    # Create a fresh session for each request sequence to avoid stale cookies if that's an issue,
+    # or re-use logic if passed (but here we keep it simple)
+    session = requests.Session()
+    session.headers.update(headers)
+    
+    response = None
+    for attempt in range(max_retries):
+        try:
+            if attempt > 0:
+                sleep_time = 2 ** attempt
+                print(f"  Retry {attempt}/{max_retries} (Wait {sleep_time}s)...")
+                time.sleep(sleep_time)
+            
+            response = session.get(url, params=params, timeout=timeout)
+            
+            if response.status_code == 200:
+                return response
+            elif response.status_code in [403, 429]:
+                print(f"  Blocked/Rate-limit (Status {response.status_code})...")
+                # If 403, maybe rotate user agent or wait longer?
+                # For now, just wait and retry.
+            else:
+                print(f"  Request failed with status {response.status_code}")
+                
+        except Exception as e:
+            print(f"  Request Error (Attempt {attempt+1}): {e}")
+            
+    return response # Return the last response (even if failed) or None
+
 @dataclass
 class GiftNiftyData:
     """Data model for GIFT Nifty quote"""
@@ -53,19 +110,11 @@ class GiftNiftyScraper:
     """
     
     BASE_URL = "https://www.moneycontrol.com/live-index/gift-nifty"
-    HEADERS = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Accept-Encoding': 'gzip, deflate',
-        'Connection': 'keep-alive',
-    }
     
-    def __init__(self, timeout: int = 10, max_retries: int = 3):
+    def __init__(self, timeout: int = 15, max_retries: int = 3):
         self.timeout = timeout
         self.max_retries = max_retries
-        self.session = requests.Session()
-        self.session.headers.update(self.HEADERS)
+        # Headers are now dynamic via helper
     
     def _safe_float(self, text: str) -> Optional[float]:
         if not text or text.strip() in ['', '-', 'N/A', 'NA', 'nan']:
@@ -148,42 +197,51 @@ class GiftNiftyScraper:
         return data
     
     def fetch(self) -> Optional[GiftNiftyData]:
-        for attempt in range(self.max_retries):
-            try:
-                if attempt > 0: time.sleep(2 ** attempt)
-                response = self.session.get(self.BASE_URL, timeout=self.timeout, params={'symbol': 'in;gsx'})
-                response.raise_for_status()
-                soup = BeautifulSoup(response.text, 'html.parser')
-                extracted = self._extract_data_from_soup(soup)
-                
-                if not extracted['last_price']: raise ValueError("Failed to extract last price")
-                
-                # Use local time if ZoneInfo fails or just use system time
-                try:
-                    now_ist = datetime.now(ZoneInfo("Asia/Kolkata"))
-                except:
-                    # Fallback to simple UTC+5:30
-                    now_ist = datetime.utcnow() + timedelta(hours=5, minutes=30)
+        # Use our robust fetcher
+        try:
+            response = make_request_with_retries(
+                self.BASE_URL, 
+                params={'symbol': 'in;gsx'}, 
+                timeout=self.timeout,
+                max_retries=self.max_retries,
+                referer="https://www.moneycontrol.com/"
+            )
+            
+            if not response or response.status_code != 200:
+                print(f"GIFT Nifty Fetch Failed: Status {response.status_code if response else 'None'}")
+                return None
 
-                is_fresh = self._validate_freshness(now_ist)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            extracted = self._extract_data_from_soup(soup)
                 
-                return GiftNiftyData(
-                    last_price=extracted['last_price'],
-                    change=extracted['change'] or 0.0,
-                    change_percent=extracted['change_percent'] or 0.0,
-                    open=extracted['open'],
-                    high=extracted['high'],
-                    low=extracted['low'],
-                    prev_close=extracted['prev_close'],
-                    week_52_high=extracted['week_52_high'],
-                    week_52_low=extracted['week_52_low'],
-                    timestamp=now_ist,
-                    source=self.BASE_URL,
-                    is_fresh=is_fresh
-                )
-            except Exception as e:
-                print(f"Attempt {attempt + 1}: Error fetching GIFT Nifty: {e}")
-        return None
+            if not extracted['last_price']: raise ValueError("Failed to extract last price")
+            
+            # Use local time if ZoneInfo fails or just use system time
+            try:
+                now_ist = datetime.now(ZoneInfo("Asia/Kolkata"))
+            except:
+                # Fallback to simple UTC+5:30
+                now_ist = datetime.utcnow() + timedelta(hours=5, minutes=30)
+
+            is_fresh = self._validate_freshness(now_ist)
+            
+            return GiftNiftyData(
+                last_price=extracted['last_price'],
+                change=extracted['change'] or 0.0,
+                change_percent=extracted['change_percent'] or 0.0,
+                open=extracted['open'],
+                high=extracted['high'],
+                low=extracted['low'],
+                prev_close=extracted['prev_close'],
+                week_52_high=extracted['week_52_high'],
+                week_52_low=extracted['week_52_low'],
+                timestamp=now_ist,
+                source=self.BASE_URL,
+                is_fresh=is_fresh
+            )
+        except Exception as e:
+            print(f"Error fetching GIFT Nifty: {e}")
+            return None
     
     def _validate_freshness(self, timestamp: datetime, max_age_minutes: int = 30) -> bool:
         try:
@@ -296,12 +354,12 @@ class NSEOptionChainFetcher:
         print("Attempting Source 2: Groww Scraping (Robust Alternative)...")
         try:
             url = "https://groww.in/options/nifty"
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-            }
+            # Use robust fetcher
+            resp = make_request_with_retries(url, timeout=15)
             
-            resp = requests.get(url, headers=headers, timeout=10)
+            if not resp or resp.status_code != 200:
+                print(f"Groww: Failed with Status {resp.status_code if resp else 'None'}")
+                return None
             if resp.status_code != 200:
                 print(f"Groww: Failed with Status {resp.status_code}")
                 return None
@@ -394,8 +452,16 @@ class NSEOptionChainFetcher:
         url = "https://www.moneycontrol.com/india/indexoptions/nifty/9/"
         
         try:
-            resp = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=15)
-            if resp.status_code != 200: return None
+            # Use robust fetcher with specific referer
+            resp = make_request_with_retries(
+                url, 
+                timeout=15, 
+                referer="https://www.moneycontrol.com/"
+            )
+            
+            if not resp or resp.status_code != 200: 
+                print(f"MC Scraping Failed: Status {resp.status_code if resp else 'None'}")
+                return None
             
             soup = BeautifulSoup(resp.content, 'html.parser')
             
@@ -1736,12 +1802,8 @@ def fetch_fiidii():
     """
     print("Fetching FII/DII Daily Data (Scraping Moneycontrol)...")
     
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Referer': 'https://www.moneycontrol.com/stocks/marketstats/fii_dii_activity/index.php',
-    }
+    # Headers managed by make_request_with_retries
+    url = "https://www.moneycontrol.com/stocks/marketstats/fii_dii_activity/index.php"
     
     all_daily_data = []
     today = datetime.now()
@@ -1863,8 +1925,14 @@ def fetch_fiidii():
         # Step 1: Fetch current month data (default page)
         url = "https://www.moneycontrol.com/stocks/marketstats/fii_dii_activity/index.php"
         
-        response = requests.get(url, headers=headers, timeout=15)
-        response.raise_for_status()
+        response = make_request_with_retries(
+            url,
+            referer="https://www.moneycontrol.com/stocks/marketstats/fii_dii_activity/index.php"
+        )
+        
+        if not response or response.status_code != 200:
+            print(f"  FII/DII Fetch Failed: Status {response.status_code if response else 'None'}")
+            raise Exception("Failed to fetch FII/DII data")
         soup = BeautifulSoup(response.content, 'html.parser')
         
         current_month_data = parse_fiidii_table(soup)
@@ -2023,12 +2091,13 @@ def fetch_market_bulletin():
     print("Fetching Market Bulletin (News)...")
     try:
         url = "https://www.moneycontrol.com/news/business/markets/"
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
-        }
         
-        response = requests.get(url, headers=headers, timeout=10)
-        if response.status_code == 200:
+        response = make_request_with_retries(
+            url,
+            referer="https://www.moneycontrol.com/"
+        )
+        
+        if response and response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
             # Moneycontrol structure changes, but typically headlines are in h2 with <a>
             # We look for typical news listing structure
@@ -2081,7 +2150,9 @@ def generate_report_date():
 
 def main():
     fetch_indices()
+    time.sleep(2) # Rate limit delay
     fetch_gift_nifty() # New Call
+    time.sleep(2) # Rate limit delay
     try:
         fetch_gold_silver()
     except Exception as e:
@@ -2090,11 +2161,15 @@ def main():
     fetch_currency()
     fetch_movers_and_highlow()
     fetch_market_bulletin() # Added
+    time.sleep(2) # Rate limit delay
     generate_report_date() # BUG FIX #1
     fetch_pcr_oi()
+    time.sleep(2) # Rate limit delay
     fetch_analysis()
     fetch_market_verdict() # Restored
+    time.sleep(2) # Rate limit delay
     fetch_fiidii()
+    time.sleep(2) # Rate limit delay
     fetch_vix_history() # Added VIX History
     print("--- Data Fetch Complete ---")
 
