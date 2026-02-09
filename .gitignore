@@ -22,3 +22,20 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables (NEVER commit real secrets)
+backend/.env
+frontend/.env
+.env
+.env.*
+!.env.example
+
+# Generated reports
+generated_reports/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+backend/venv/
+*.db
