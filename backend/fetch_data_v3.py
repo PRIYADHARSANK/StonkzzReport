@@ -140,7 +140,7 @@ class GiftNiftyScraper:
             self._log_debug("❌ Validation failed: last_price is zero or null")
             return False
         
-        # Check reasonable price range (GIFT Nifty typically 15000-30000)
+        # Check reasonable price range (GIFT Nifty typically 15000-35000)
         if not (15000 <= data['last_price'] <= 35000):
             self._log_debug(f"⚠️ Warning: last_price {data['last_price']} outside expected range")
         
@@ -178,8 +178,11 @@ class GiftNiftyScraper:
                     import json
                     json_data = json.loads(next_data_script.string)
                     
-                    # Navigate through the JSON structure
-                    stock_data = json_data.get('props', {}).get('pageProps', {}).get('consumptionData', {}).get('stockData', {})
+                    # Navigate through the JSON structure safely
+                    props = json_data.get('props', {})
+                    page_props = props.get('pageProps', {})
+                    consumption_data = page_props.get('consumptionData', {})
+                    stock_data = consumption_data.get('stockData', {})
                     
                     if stock_data:
                         self._log_debug(f"Extracted stock_data keys: {list(stock_data.keys())}")
@@ -2177,8 +2180,18 @@ def fetch_gift_nifty():
             try:
                 with open(existing_file, 'r') as f:
                     existing_data = json.load(f)
+                    # Parse timestamp without timezone, then make it timezone-aware for comparison
                     existing_timestamp = datetime.strptime(existing_data['timestamp'], '%Y-%m-%d %H:%M:%S')
-                    age_hours = (datetime.now() - existing_timestamp).total_seconds() / 3600
+                    # Assume the stored timestamp is in IST
+                    try:
+                        from zoneinfo import ZoneInfo
+                        existing_timestamp = existing_timestamp.replace(tzinfo=ZoneInfo("Asia/Kolkata"))
+                        now = datetime.now(ZoneInfo("Asia/Kolkata"))
+                    except:
+                        # Fallback: use naive datetime comparison (less accurate but works)
+                        now = datetime.now()
+                    
+                    age_hours = (now - existing_timestamp).total_seconds() / 3600
                     print(f"📊 Existing data age: {age_hours:.1f} hours (timestamp: {existing_data['timestamp']})")
                     
                     if age_hours > 24:

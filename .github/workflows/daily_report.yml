@@ -73,6 +73,15 @@ jobs:
           import os
           import json
           from datetime import datetime
+          try:
+              from zoneinfo import ZoneInfo
+              # Use IST timezone for consistency with data generation
+              timezone = ZoneInfo("Asia/Kolkata")
+              use_timezone = True
+          except ImportError:
+              # Fallback to naive datetime if zoneinfo not available
+              timezone = None
+              use_timezone = False
 
           print("\n" + "="*70)
           print("DATA FRESHNESS VALIDATION")
@@ -93,8 +102,17 @@ jobs:
                           
                           timestamp_str = data.get('timestamp', '')
                           if timestamp_str:
+                              # Parse timestamp without timezone
                               timestamp = datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S')
-                              age_hours = (datetime.now() - timestamp).total_seconds() / 3600
+                              
+                              # Make timezone-aware for accurate comparison
+                              if use_timezone:
+                                  timestamp = timestamp.replace(tzinfo=timezone)
+                                  now = datetime.now(timezone)
+                              else:
+                                  now = datetime.now()
+                              
+                              age_hours = (now - timestamp).total_seconds() / 3600
                               
                               print(f"📊 {file_path}")
                               print(f"   Timestamp: {timestamp_str}")
