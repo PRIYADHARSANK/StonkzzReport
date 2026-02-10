@@ -106,15 +106,45 @@ class GiftNiftyData:
 
 class GiftNiftyScraper:
     """
-    Efficient web scraper for GIFT Nifty 50 data from Moneycontrol
+    Enhanced web scraper for GIFT Nifty 50 data with robust error handling
     """
     
     BASE_URL = "https://www.moneycontrol.com/live-index/gift-nifty"
     
-    def __init__(self, timeout: int = 15, max_retries: int = 3):
+    def __init__(self, timeout: int = 15, max_retries: int = 3, debug_mode: bool = True):
         self.timeout = timeout
         self.max_retries = max_retries
+        self.debug_mode = debug_mode
+        self.debug_info = []  # Store debug information
         # Headers are now dynamic via helper
+    
+    def _log_debug(self, message: str):
+        """Enhanced debug logging"""
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        log_msg = f"[{timestamp}] GIFT Nifty Debug: {message}"
+        print(log_msg)
+        self.debug_info.append(log_msg)
+    
+    def _save_debug_html(self, html_content: str):
+        """Save HTML for debugging failed extractions"""
+        if self.debug_mode:
+            debug_file = os.path.join(DATA_DIR, 'debug_gift_nifty.html')
+            with open(debug_file, 'w', encoding='utf-8') as f:
+                f.write(html_content)
+            self._log_debug(f"Saved debug HTML to {debug_file}")
+    
+    def _validate_data(self, data: Dict) -> bool:
+        """Validate extracted data quality"""
+        # Check for zero/null values
+        if not data.get('last_price') or data['last_price'] == 0:
+            self._log_debug("❌ Validation failed: last_price is zero or null")
+            return False
+        
+        # Check reasonable price range (GIFT Nifty typically 15000-35000)
+        if not (15000 <= data['last_price'] <= 35000):
+            self._log_debug(f"⚠️ Warning: last_price {data['last_price']} outside expected range")
+        
+        return True
     
     def _safe_float(self, text: str) -> Optional[float]:
         if not text or text.strip() in ['', '-', 'N/A', 'NA', 'nan']:
@@ -128,6 +158,9 @@ class GiftNiftyScraper:
             return None
     
     def _extract_data_from_soup(self, soup: BeautifulSoup) -> Dict[str, Optional[float]]:
+        """Enhanced data extraction with multiple selector patterns"""
+        self._log_debug("Starting data extraction from HTML")
+        
         data = {
             'last_price': None, 'change': None, 'change_percent': None,
             'open': None, 'high': None, 'low': None, 'prev_close': None,
@@ -136,44 +169,89 @@ class GiftNiftyScraper:
         
         try:
             # Method 1: Try parsing Next.js data (More reliable)
+            self._log_debug("Attempting Method 1: Next.js __NEXT_DATA__ extraction")
             next_data_script = soup.find('script', id='__NEXT_DATA__')
+            
             if next_data_script:
+                self._log_debug("Found __NEXT_DATA__ script tag")
                 try:
                     import json
                     json_data = json.loads(next_data_script.string)
-                    stock_data = json_data['props']['pageProps']['consumptionData']['stockData']
                     
-                    data['last_price'] = self._safe_float(stock_data.get('lastprice'))
-                    data['change'] = self._safe_float(stock_data.get('change'))
-                    data['change_percent'] = self._safe_float(stock_data.get('percentchange'))
-                    data['open'] = self._safe_float(stock_data.get('open'))
-                    data['high'] = self._safe_float(stock_data.get('high'))
-                    data['low'] = self._safe_float(stock_data.get('low'))
-                    data['prev_close'] = self._safe_float(stock_data.get('prevclose'))
-                    data['week_52_high'] = self._safe_float(stock_data.get('yearlyhigh'))
-                    data['week_52_low'] = self._safe_float(stock_data.get('yearlylow'))
+                    # Navigate through the JSON structure safely
+                    props = json_data.get('props', {})
+                    page_props = props.get('pageProps', {})
+                    consumption_data = page_props.get('consumptionData', {})
+                    stock_data = consumption_data.get('stockData', {})
                     
-                    if data['last_price']:
-                        return data
+                    if stock_data:
+                        self._log_debug(f"Extracted stock_data keys: {list(stock_data.keys())}")
+                        
+                        data['last_price'] = self._safe_float(stock_data.get('lastprice'))
+                        data['change'] = self._safe_float(stock_data.get('change'))
+                        data['change_percent'] = self._safe_float(stock_data.get('percentchange'))
+                        data['open'] = self._safe_float(stock_data.get('open'))
+                        data['high'] = self._safe_float(stock_data.get('high'))
+                        data['low'] = self._safe_float(stock_data.get('low'))
+                        data['prev_close'] = self._safe_float(stock_data.get('prevclose'))
+                        data['week_52_high'] = self._safe_float(stock_data.get('yearlyhigh'))
+                        data['week_52_low'] = self._safe_float(stock_data.get('yearlylow'))
+                        
+                        if data['last_price']:
+                            self._log_debug(f"✅ Method 1 SUCCESS: last_price={data['last_price']}")
+                            return data
+                    else:
+                        self._log_debug("⚠️ stock_data is empty in JSON structure")
+                        
                 except Exception as e:
-                    print(f"JSON Parsing Error: {e}")
+                    self._log_debug(f"❌ Method 1 JSON parsing failed: {e}")
 
-            # Method 2: Fallback to HTML selectors (Legacy)
-            price_elem = soup.select_one('div.inprice1 span.np_val, span.nsenumber')
-            if price_elem:
-                data['last_price'] = self._safe_float(price_elem.text)
+            # Method 2: Enhanced HTML selector patterns
+            self._log_debug("Attempting Method 2: HTML selector extraction")
             
-            change_elem = soup.select_one('div.inprice1 span.nsechange, span.nse_pchange')
-            if change_elem:
-                change_text = change_elem.text.strip()
-                if '(' in change_text:
-                    parts = change_text.split('(')
-                    data['change'] = self._safe_float(parts[0])
-                    data['change_percent'] = self._safe_float(parts[1].replace(')', ''))
-                else:
-                    data['change'] = self._safe_float(change_text)
+            # Try multiple selector patterns for price
+            price_selectors = [
+                'div.inprice1 span.np_val',
+                'span.nsenumber',
+                'div.price span.value',
+                'div.stock-price span.price',
+                '.pcnstext strong'
+            ]
             
+            for selector in price_selectors:
+                price_elem = soup.select_one(selector)
+                if price_elem:
+                    data['last_price'] = self._safe_float(price_elem.text)
+                    if data['last_price']:
+                        self._log_debug(f"✅ Found price using selector: {selector}, value={data['last_price']}")
+                        break
+            
+            # Extract change information
+            change_selectors = [
+                'div.inprice1 span.nsechange',
+                'span.nse_pchange',
+                'div.change-value'
+            ]
+            
+            for selector in change_selectors:
+                change_elem = soup.select_one(selector)
+                if change_elem:
+                    change_text = change_elem.text.strip()
+                    if '(' in change_text:
+                        parts = change_text.split('(')
+                        data['change'] = self._safe_float(parts[0])
+                        data['change_percent'] = self._safe_float(parts[1].replace(')', ''))
+                    else:
+                        data['change'] = self._safe_float(change_text)
+                    
+                    if data['change'] is not None:
+                        self._log_debug(f"✅ Found change using selector: {selector}")
+                        break
+            
+            # Extract table data
             data_rows = soup.select('div.oview_table tr, table.mctable tr')
+            self._log_debug(f"Found {len(data_rows)} table rows for detailed data")
+            
             for row in data_rows:
                 cells = row.find_all(['td', 'th'])
                 if len(cells) >= 2:
@@ -188,17 +266,25 @@ class GiftNiftyScraper:
                     elif '52' in key and 'low' in key: data['week_52_low'] = self._safe_float(value)
 
             if not data['last_price']:
-                alt_price = soup.select_one('.pcnstext strong, .nsecur span')
-                if alt_price: data['last_price'] = self._safe_float(alt_price.text)
+                self._log_debug("❌ Method 2 failed: No price found with any selector")
+            else:
+                self._log_debug(f"✅ Method 2 partial success: Extracted {sum(1 for v in data.values() if v is not None)} fields")
             
         except Exception as e:
-            print(f"Warning: Error during data extraction: {e}")
+            self._log_debug(f"❌ Fatal error during extraction: {e}")
+            import traceback
+            self._log_debug(f"Traceback: {traceback.format_exc()}")
         
         return data
     
     def fetch(self) -> Optional[GiftNiftyData]:
-        # Use our robust fetcher
+        """Enhanced fetch with detailed logging and validation"""
+        self._log_debug("="*60)
+        self._log_debug("Starting GIFT Nifty fetch process")
+        
         try:
+            self._log_debug(f"Making request to {self.BASE_URL}")
+            
             response = make_request_with_retries(
                 self.BASE_URL, 
                 params={'symbol': 'in;gsx'}, 
@@ -207,25 +293,44 @@ class GiftNiftyScraper:
                 referer="https://www.moneycontrol.com/"
             )
             
-            if not response or response.status_code != 200:
-                print(f"GIFT Nifty Fetch Failed: Status {response.status_code if response else 'None'}")
+            if not response:
+                self._log_debug("❌ No response received from server")
+                return None
+            
+            self._log_debug(f"Response status: {response.status_code}")
+            self._log_debug(f"Response content length: {len(response.text)} bytes")
+            
+            if response.status_code != 200:
+                self._log_debug(f"❌ HTTP error: {response.status_code}")
+                self._save_debug_html(response.text)
                 return None
 
             soup = BeautifulSoup(response.text, 'html.parser')
-            extracted = self._extract_data_from_soup(soup)
-                
-            if not extracted['last_price']: raise ValueError("Failed to extract last price")
+            self._log_debug("HTML parsed successfully")
             
-            # Use local time if ZoneInfo fails or just use system time
+            # Save HTML for debugging
+            if self.debug_mode:
+                self._save_debug_html(response.text)
+            
+            extracted = self._extract_data_from_soup(soup)
+            
+            # Validate extracted data
+            if not self._validate_data(extracted):
+                self._log_debug("❌ Data validation failed")
+                raise ValueError("Extracted data failed validation")
+            
+            self._log_debug(f"✅ Data extraction successful: price={extracted['last_price']}")
+            
+            # Create timestamp
             try:
                 now_ist = datetime.now(ZoneInfo("Asia/Kolkata"))
             except:
-                # Fallback to simple UTC+5:30
                 now_ist = datetime.utcnow() + timedelta(hours=5, minutes=30)
 
             is_fresh = self._validate_freshness(now_ist)
+            self._log_debug(f"Data freshness: {is_fresh}")
             
-            return GiftNiftyData(
+            result = GiftNiftyData(
                 last_price=extracted['last_price'],
                 change=extracted['change'] or 0.0,
                 change_percent=extracted['change_percent'] or 0.0,
@@ -239,8 +344,15 @@ class GiftNiftyScraper:
                 source=self.BASE_URL,
                 is_fresh=is_fresh
             )
+            
+            self._log_debug("="*60)
+            return result
+            
         except Exception as e:
-            print(f"Error fetching GIFT Nifty: {e}")
+            self._log_debug(f"❌ Fatal error in fetch(): {e}")
+            import traceback
+            self._log_debug(f"Full traceback:\n{traceback.format_exc()}")
+            self._log_debug("="*60)
             return None
     
     def _validate_freshness(self, timestamp: datetime, max_age_minutes: int = 30) -> bool:
@@ -2056,36 +2168,111 @@ def fetch_vix_history():
         print(f"Error fetching VIX history: {e}")
 
 def fetch_gift_nifty():
-    print("Fetching GIFT Nifty 50...")
+    """Enhanced GIFT Nifty fetch with fallback and validation"""
+    print("\n" + "="*70)
+    print("FETCHING GIFT NIFTY 50 DATA")
+    print("="*70)
+    
     try:
-        scraper = GiftNiftyScraper()
+        # Check if existing data is fresh enough
+        existing_file = os.path.join(DATA_DIR, 'gift_nifty.json')
+        if os.path.exists(existing_file):
+            try:
+                with open(existing_file, 'r') as f:
+                    existing_data = json.load(f)
+                    # Parse timestamp without timezone, then make it timezone-aware for comparison
+                    existing_timestamp = datetime.strptime(existing_data['timestamp'], '%Y-%m-%d %H:%M:%S')
+                    # Assume the stored timestamp is in IST
+                    try:
+                        from zoneinfo import ZoneInfo
+                        existing_timestamp = existing_timestamp.replace(tzinfo=ZoneInfo("Asia/Kolkata"))
+                        now = datetime.now(ZoneInfo("Asia/Kolkata"))
+                    except:
+                        # Fallback: use naive datetime comparison (less accurate but works)
+                        now = datetime.now()
+                    
+                    age_hours = (now - existing_timestamp).total_seconds() / 3600
+                    print(f"📊 Existing data age: {age_hours:.1f} hours (timestamp: {existing_data['timestamp']})")
+                    
+                    if age_hours > 24:
+                        print(f"⚠️ WARNING: Existing data is {age_hours:.1f} hours old (>24h)")
+            except Exception as e:
+                print(f"⚠️ Could not check existing data age: {e}")
+        
+        # Attempt primary fetch from Moneycontrol
+        print("\n🔍 Primary Source: Moneycontrol")
+        scraper = GiftNiftyScraper(debug_mode=True)
         data = scraper.fetch()
         
-        if data:
-            import json
-            # BUG FIX #3: Normalize GIFT Nifty Timestamp
+        if data and data.last_price > 0:
+            # Success - save the data
+            print(f"✅ PRIMARY FETCH SUCCESS")
+            print(f"   Last Price: {data.last_price:,.2f}")
+            print(f"   Change: {data.change:+.2f} ({data.change_percent:+.2f}%)")
+            print(f"   Timestamp: {data.timestamp}")
+            
             dt = data.to_dict()
             dt['timestamp'] = get_last_market_close().strftime('%Y-%m-%d %H:%M:%S')
             
             json_str = json.dumps(dt, indent=2)
             save_file('gift_nifty.json', json_str)
-            print(f"Fetched GIFT Nifty: {data.last_price}")
+            
+            # Save debug log
+            save_file('gift_nifty_debug.log', '\n'.join(scraper.debug_info))
+            print("="*70 + "\n")
+            return True
+            
         else:
-            print("Failed to fetch GIFT Nifty data")
-            # Create a localized fallback if needed, or just leave empty?
-            # Creating a dummy file to prevent frontend 404
-            import json
-            # BUG FIX #3: Fallback Date
+            # Primary source failed - try fallback
+            print("⚠️ PRIMARY SOURCE FAILED - Attempting fallback...")
+            
+            # TODO: Implement fallback data source (Yahoo Finance/NSE API)
+            # For now, create a dated dummy file with clear error indication
+            print("❌ FALLBACK NOT IMPLEMENTED YET")
+            
+            # Don't overwrite existing data if it's fresher than dummy data
+            if os.path.exists(existing_file):
+                print("⚠️ Keeping existing data file (not overwriting with dummy)")
+                print("="*70 + "\n")
+                return False
+            
+            # Only create dummy if no existing file
+            print("⚠️ Creating dummy data file with error indication")
             dummy = {
-                "last_price": 0, "change": 0, "change_percent": 0,
-                "timestamp": get_last_market_close().strftime('%Y-%m-%d %H:%M:%S')
+                "last_price": 0,
+                "change": 0,
+                "change_percent": 0,
+                "open": None,
+                "high": None,
+                "low": None,
+                "prev_close": None,
+                "week_52_high": None,
+                "week_52_low": None,
+                "timestamp": get_last_market_close().strftime('%Y-%m-%d %H:%M:%S'),
+                "source": "FETCH_FAILED",
+                "is_fresh": False,
+                "error": "Data fetch failed from all sources"
             }
-            save_file('gift_nifty.json', json.dumps(dummy))
+            save_file('gift_nifty.json', json.dumps(dummy, indent=2))
+            
+            # Save debug log
+            if scraper.debug_info:
+                save_file('gift_nifty_debug.log', '\n'.join(scraper.debug_info))
+            
+            print("="*70 + "\n")
+            return False
             
     except Exception as e:
-        print(f"Error in GIFT Nifty Fetch: {e}")
+        print(f"❌ CRITICAL ERROR in GIFT Nifty Fetch: {e}")
         import traceback
         traceback.print_exc()
+        
+        # Save error log
+        error_log = f"Critical Error: {e}\n\nTraceback:\n{traceback.format_exc()}"
+        save_file('gift_nifty_error.log', error_log)
+        
+        print("="*70 + "\n")
+        return False
 
 def fetch_market_bulletin():
     print("Fetching Market Bulletin (News)...")

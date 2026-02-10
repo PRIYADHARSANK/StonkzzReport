@@ -66,6 +66,81 @@ jobs:
           python fetch_data_v3.py
         continue-on-error: true  # Continue even if some data sources fail
 
+      # 8.5. Validate Data Freshness
+      - name: Validate Data Freshness
+        run: |
+          python - <<EOF
+          import os
+          import json
+          from datetime import datetime
+          try:
+              from zoneinfo import ZoneInfo
+              # Use IST timezone for consistency with data generation
+              timezone = ZoneInfo("Asia/Kolkata")
+              use_timezone = True
+          except ImportError:
+              # Fallback to naive datetime if zoneinfo not available
+              timezone = None
+              use_timezone = False
+
+          print("\n" + "="*70)
+          print("DATA FRESHNESS VALIDATION")
+          print("="*70 + "\n")
+
+          data_files = [
+              'frontend/public/Data/gift_nifty.json',
+              'frontend/public/Data/nifty_data.json',
+              'frontend/public/Data/fii_dii_data.json'
+          ]
+
+          stale_files = []
+          for file_path in data_files:
+              if os.path.exists(file_path):
+                  try:
+                      with open(file_path, 'r') as f:
+                          data = json.load(f)
+                          
+                          timestamp_str = data.get('timestamp', '')
+                          if timestamp_str:
+                              # Parse timestamp without timezone
+                              timestamp = datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S')
+                              
+                              # Make timezone-aware for accurate comparison
+                              if use_timezone:
+                                  timestamp = timestamp.replace(tzinfo=timezone)
+                                  now = datetime.now(timezone)
+                              else:
+                                  now = datetime.now()
+                              
+                              age_hours = (now - timestamp).total_seconds() / 3600
+                              
+                              print(f"📊 {file_path}")
+                              print(f"   Timestamp: {timestamp_str}")
+                              print(f"   Age: {age_hours:.1f} hours")
+                              
+                              if age_hours > 24:
+                                  print(f"   ⚠️ WARNING: Data is STALE (>24h)")
+                                  stale_files.append((file_path, age_hours))
+                              else:
+                                  print(f"   ✅ Data is fresh")
+                              print()
+                  except Exception as e:
+                      print(f"❌ Error checking {file_path}: {e}\n")
+
+          if stale_files:
+              print("="*70)
+              print("⚠️ STALE DATA DETECTED:")
+              for file_path, age in stale_files:
+                  print(f"  - {file_path}: {age:.1f} hours old")
+              print("="*70)
+              exit(1)  # Fail the workflow if critical data is stale
+          else:
+              print("="*70)
+              print("✅ All data files are fresh")
+              print("="*70)
+          EOF
+        continue-on-error: false  # Make this a hard failure
+
       # 9. Generate PDF Report and Send Email
       - name: Generate PDF and Send Email
         run: |
