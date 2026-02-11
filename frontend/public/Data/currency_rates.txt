@@ -1,8 +1,8 @@
 Code | Name | Country | Rate
 ---
-USD | US Dollar | USA | 90.31
-EUR | Euro | Europe | 106.30
-GBP | British Pound | UK | 122.13
-JPY | Japanese Yen | Japan | 0.58
-AED | UAE Dirham | UAE | 24.59
-SGD | Singapore Dollar | Singapore | 70.74
+USD | US Dollar | USA | 90.54
+EUR | Euro | Europe | 107.88
+GBP | British Pound | UK | 123.75
+JPY | Japanese Yen | Japan | 0.59
+AED | UAE Dirham | UAE | 24.60
+SGD | Singapore Dollar | Singapore | 71.68

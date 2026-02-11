@@ -1,2 +1,2 @@
 Verdict: Mixed Signals
-Details: However, Market Breadth is Bearish, contradicting the Bullish trend. Low volatility (VIX 11.94) suggests complacency.
+Details: However, Market Breadth is Bearish, contradicting the Strong Bullish trend. Low volatility (VIX 11.42) suggests complacency. PCR is Neutral, supporting a rangebound view.

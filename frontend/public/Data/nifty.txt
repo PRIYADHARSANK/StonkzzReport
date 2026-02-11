@@ -1,14 +1,14 @@
 NIFTY 50 DASHBOARD DATA
-Current Price: 25,693.70
-Change: ₹+50.90 (+0.20%)
-Previous Close: 25,642.80
-Open: 25,605.80
-Volume: 375500
+Current Price: 25,968.05
+Change: ₹+32.90 (+0.13%)
+Previous Close: 25,935.15
+Open: 25,997.45
+Volume: 91763148
 
 52-WEEK RANGE
 High: 26,373.20
 Low: 21,743.65
 
 INTRADAY RANGE
-High: 25,703.95
-Low: 25,491.90
+High: 26,009.40
+Low: 25,909.85

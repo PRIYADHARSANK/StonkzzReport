@@ -1,278 +1,278 @@
 [
   {
-    "symbol": "LICI",
-    "name": "LIC India",
-    "value": 901.85,
-    "change": 7.4
-  },
-  {
-    "symbol": "ITC",
-    "name": "ITC Ltd",
-    "value": 325.8,
-    "change": 5.03
-  },
-  {
-    "symbol": "KOTAKBANK",
-    "name": "Kotak Mahindra Bank",
-    "value": 422.35,
-    "change": 3.33
-  },
-  {
-    "symbol": "HINDUNILVR",
-    "name": "HUL",
-    "value": 2424.2,
-    "change": 2.96
-  },
-  {
-    "symbol": "BHARTIARTL",
-    "name": "Bharti Airtel",
-    "value": 2038.4,
-    "change": 2.31
-  },
-  {
-    "symbol": "BAJFINANCE",
-    "name": "Bajaj Finance",
-    "value": 981.7,
-    "change": 1.76
-  },
-  {
-    "symbol": "POWERGRID",
-    "name": "Power Grid Corp",
-    "value": 292.75,
-    "change": 1.18
-  },
-  {
-    "symbol": "BPCL",
-    "name": "BPCL",
-    "value": 386.35,
-    "change": 1.13
-  },
-  {
-    "symbol": "TITAN",
-    "name": "Titan Company",
-    "value": 4141.0,
-    "change": 1.06
-  },
-  {
-    "symbol": "AXISBANK",
-    "name": "Axis Bank",
-    "value": 1341.6,
-    "change": 0.83
-  },
-  {
-    "symbol": "HINDALCO",
-    "name": "Hindalco",
-    "value": 942.55,
-    "change": 0.76
-  },
-  {
-    "symbol": "ICICIBANK",
-    "name": "ICICI Bank",
-    "value": 1406.1,
-    "change": 0.69
-  },
-  {
-    "symbol": "NESTLEIND",
-    "name": "Nestle India",
-    "value": 1303.3,
-    "change": 0.52
-  },
-  {
-    "symbol": "RELIANCE",
-    "name": "Reliance Industries",
-    "value": 1450.8,
-    "change": 0.51
-  },
-  {
-    "symbol": "TATACONSUM",
-    "name": "Tata Consumer",
-    "value": 1159.3,
-    "change": 0.29
-  },
-  {
-    "symbol": "NTPC",
-    "name": "NTPC",
-    "value": 365.05,
-    "change": 0.22
-  },
-  {
-    "symbol": "COALINDIA",
-    "name": "Coal India",
-    "value": 432.8,
-    "change": 0.22
+    "symbol": "EICHERMOT",
+    "name": "Eicher Motors",
+    "value": 7776.5,
+    "change": 6.59
   },
   {
     "symbol": "M&M",
     "name": "Mahindra & Mahindra",
-    "value": 3578.0,
-    "change": 0.17
-  },
-  {
-    "symbol": "LT",
-    "name": "Larsen & Toubro",
-    "value": 4068.1,
-    "change": 0.12
-  },
-  {
-    "symbol": "ONGC",
-    "name": "ONGC",
-    "value": 268.95,
-    "change": -0.09
-  },
-  {
-    "symbol": "HEROMOTOCO",
-    "name": "Hero MotoCorp",
-    "value": 5753.5,
-    "change": -0.22
-  },
-  {
-    "symbol": "CIPLA",
-    "name": "Cipla",
-    "value": 1330.0,
-    "change": -0.25
-  },
-  {
-    "symbol": "JSWSTEEL",
-    "name": "JSW Steel",
-    "value": 1236.2,
-    "change": -0.29
-  },
-  {
-    "symbol": "DRREDDY",
-    "name": "Dr. Reddy's",
-    "value": 1241.2,
-    "change": -0.3
-  },
-  {
-    "symbol": "TATASTEEL",
-    "name": "Tata Steel",
-    "value": 197.06,
-    "change": -0.35
-  },
-  {
-    "symbol": "ULTRACEMCO",
-    "name": "UltraTech Cement",
-    "value": 12722.0,
-    "change": -0.4
-  },
-  {
-    "symbol": "MARUTI",
-    "name": "Maruti Suzuki",
-    "value": 14997.0,
-    "change": -0.41
-  },
-  {
-    "symbol": "SUNPHARMA",
-    "name": "Sun Pharma",
-    "value": 1695.1,
-    "change": -0.44
-  },
-  {
-    "symbol": "EICHERMOT",
-    "name": "Eicher Motors",
-    "value": 7177.5,
-    "change": -0.44
-  },
-  {
-    "symbol": "ADANIENT",
-    "name": "Adani Enterprises",
-    "value": 2226.4,
-    "change": -0.46
-  },
-  {
-    "symbol": "ADANIPOWER",
-    "name": "Adani Power",
-    "value": 152.74,
-    "change": -0.46
+    "value": 3765.7,
+    "change": 2.45
   },
   {
     "symbol": "SBIN",
     "name": "SBI",
-    "value": 1066.4,
-    "change": -0.66
+    "value": 1172.0,
+    "change": 2.44
   },
   {
-    "symbol": "UPL",
-    "name": "UPL Ltd",
-    "value": 741.3,
-    "change": -0.85
+    "symbol": "MARUTI",
+    "name": "Maruti Suzuki",
+    "value": 15367.0,
+    "change": 1.46
   },
   {
-    "symbol": "INFY",
-    "name": "Infosys",
-    "value": 1507.1,
-    "change": -0.86
+    "symbol": "HEROMOTOCO",
+    "name": "Hero MotoCorp",
+    "value": 5711.0,
+    "change": 1.2
   },
   {
-    "symbol": "HDFCBANK",
-    "name": "HDFC Bank",
-    "value": 941.1,
-    "change": -0.91
-  },
-  {
-    "symbol": "GRASIM",
-    "name": "Grasim Industries",
-    "value": 2836.9,
-    "change": -0.94
-  },
-  {
-    "symbol": "HCLTECH",
-    "name": "HCL Tech",
-    "value": 1593.7,
-    "change": -1.01
-  },
-  {
-    "symbol": "SBILIFE",
-    "name": "SBI Life",
-    "value": 1996.7,
-    "change": -1.05
-  },
-  {
-    "symbol": "WIPRO",
-    "name": "Wipro",
-    "value": 230.72,
-    "change": -1.14
-  },
-  {
-    "symbol": "INDUSINDBK",
-    "name": "IndusInd Bank",
-    "value": 903.6,
-    "change": -1.18
-  },
-  {
-    "symbol": "ADANIPORTS",
-    "name": "Adani Ports",
-    "value": 1550.7,
-    "change": -1.24
-  },
-  {
-    "symbol": "ASIANPAINT",
-    "name": "Asian Paints",
-    "value": 2401.1,
-    "change": -1.27
-  },
-  {
-    "symbol": "TECHM",
-    "name": "Tech Mahindra",
-    "value": 1619.9,
-    "change": -1.6
-  },
-  {
-    "symbol": "TCS",
-    "name": "TCS",
-    "value": 2941.6,
-    "change": -1.67
+    "symbol": "DRREDDY",
+    "name": "Dr. Reddy's",
+    "value": 1266.9,
+    "change": 0.87
   },
   {
     "symbol": "DIVISLAB",
     "name": "Divi's Lab",
-    "value": 6024.5,
-    "change": -1.91
+    "value": 6227.5,
+    "change": 0.84
+  },
+  {
+    "symbol": "BAJFINANCE",
+    "name": "Bajaj Finance",
+    "value": 971.65,
+    "change": 0.63
+  },
+  {
+    "symbol": "HINDUNILVR",
+    "name": "HUL",
+    "value": 2468.2,
+    "change": 0.6
+  },
+  {
+    "symbol": "UPL",
+    "name": "UPL Ltd",
+    "value": 750.5,
+    "change": 0.6
+  },
+  {
+    "symbol": "TATACONSUM",
+    "name": "Tata Consumer",
+    "value": 1157.8,
+    "change": 0.49
+  },
+  {
+    "symbol": "BPCL",
+    "name": "BPCL",
+    "value": 387.5,
+    "change": 0.3
+  },
+  {
+    "symbol": "CIPLA",
+    "name": "Cipla",
+    "value": 1345.8,
+    "change": 0.28
+  },
+  {
+    "symbol": "NESTLEIND",
+    "name": "Nestle India",
+    "value": 1312.0,
+    "change": 0.26
+  },
+  {
+    "symbol": "RELIANCE",
+    "name": "Reliance Industries",
+    "value": 1462.1,
+    "change": 0.25
+  },
+  {
+    "symbol": "SBILIFE",
+    "name": "SBI Life",
+    "value": 2021.0,
+    "change": 0.13
+  },
+  {
+    "symbol": "NTPC",
+    "name": "NTPC",
+    "value": 367.2,
+    "change": 0.08
+  },
+  {
+    "symbol": "JSWSTEEL",
+    "name": "JSW Steel",
+    "value": 1245.1,
+    "change": 0.08
+  },
+  {
+    "symbol": "TECHM",
+    "name": "Tech Mahindra",
+    "value": 1644.8,
+    "change": 0.01
+  },
+  {
+    "symbol": "SUNPHARMA",
+    "name": "Sun Pharma",
+    "value": 1707.3,
+    "change": -0.03
+  },
+  {
+    "symbol": "KOTAKBANK",
+    "name": "Kotak Mahindra Bank",
+    "value": 429.15,
+    "change": -0.03
+  },
+  {
+    "symbol": "POWERGRID",
+    "name": "Power Grid Corp",
+    "value": 294.15,
+    "change": -0.07
+  },
+  {
+    "symbol": "LT",
+    "name": "Larsen & Toubro",
+    "value": 4163.4,
+    "change": -0.13
+  },
+  {
+    "symbol": "ADANIPOWER",
+    "name": "Adani Power",
+    "value": 148.78,
+    "change": -0.18
+  },
+  {
+    "symbol": "ADANIENT",
+    "name": "Adani Enterprises",
+    "value": 2224.1,
+    "change": -0.19
+  },
+  {
+    "symbol": "ASIANPAINT",
+    "name": "Asian Paints",
+    "value": 2388.9,
+    "change": -0.2
+  },
+  {
+    "symbol": "ICICIBANK",
+    "name": "ICICI Bank",
+    "value": 1403.5,
+    "change": -0.21
+  },
+  {
+    "symbol": "WIPRO",
+    "name": "Wipro",
+    "value": 230.94,
+    "change": -0.23
+  },
+  {
+    "symbol": "TITAN",
+    "name": "Titan Company",
+    "value": 4251.9,
+    "change": -0.4
+  },
+  {
+    "symbol": "BHARTIARTL",
+    "name": "Bharti Airtel",
+    "value": 2003.1,
+    "change": -0.41
+  },
+  {
+    "symbol": "AXISBANK",
+    "name": "Axis Bank",
+    "value": 1350.6,
+    "change": -0.45
+  },
+  {
+    "symbol": "HDFCBANK",
+    "name": "HDFC Bank",
+    "value": 927.7,
+    "change": -0.5
+  },
+  {
+    "symbol": "TCS",
+    "name": "TCS",
+    "value": 2968.0,
+    "change": -0.56
   },
   {
     "symbol": "HDFCLIFE",
     "name": "HDFC Life",
-    "value": 703.5,
-    "change": -2.39
+    "value": 699.75,
+    "change": -0.6
+  },
+  {
+    "symbol": "INFY",
+    "name": "Infosys",
+    "value": 1488.6,
+    "change": -0.61
+  },
+  {
+    "symbol": "ULTRACEMCO",
+    "name": "UltraTech Cement",
+    "value": 12942.0,
+    "change": -0.62
+  },
+  {
+    "symbol": "INDUSINDBK",
+    "name": "IndusInd Bank",
+    "value": 921.5,
+    "change": -0.66
+  },
+  {
+    "symbol": "ITC",
+    "name": "ITC Ltd",
+    "value": 319.25,
+    "change": -0.67
+  },
+  {
+    "symbol": "TATASTEEL",
+    "name": "Tata Steel",
+    "value": 206.32,
+    "change": -0.81
+  },
+  {
+    "symbol": "HCLTECH",
+    "name": "HCL Tech",
+    "value": 1560.0,
+    "change": -0.83
+  },
+  {
+    "symbol": "ADANIPORTS",
+    "name": "Adani Ports",
+    "value": 1540.7,
+    "change": -0.9
+  },
+  {
+    "symbol": "GRASIM",
+    "name": "Grasim Industries",
+    "value": 2926.0,
+    "change": -0.94
+  },
+  {
+    "symbol": "ONGC",
+    "name": "ONGC",
+    "value": 269.3,
+    "change": -1.05
+  },
+  {
+    "symbol": "HINDALCO",
+    "name": "Hindalco",
+    "value": 957.75,
+    "change": -1.15
+  },
+  {
+    "symbol": "COALINDIA",
+    "name": "Coal India",
+    "value": 421.85,
+    "change": -2.11
+  },
+  {
+    "symbol": "LICI",
+    "name": "LIC India",
+    "value": 871.0,
+    "change": -2.32
   }
 ]

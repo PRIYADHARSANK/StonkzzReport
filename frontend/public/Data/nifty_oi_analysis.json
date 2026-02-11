@@ -1,127 +1,107 @@
 {
   "summary": {
-    "spot": 25693.7,
-    "pcr": 0.858,
-    "call_oi": 3011098.0,
-    "put_oi": 2583541.0,
-    "support": 25500.0,
-    "resistance": 27000.0,
-    "timestamp": "Groww (2026-02-06 15:30:00)"
+    "spot": 25968.05,
+    "pcr": 1.1511,
+    "call_oi": 3626968,
+    "put_oi": 4174984,
+    "support": 25900,
+    "resistance": 27100,
+    "timestamp": "Synthetic Data (2026-02-11 11:08:28)"
   },
   "analysis_points": [
-    "Current PCR is **0.858** with Total Put OI at **2,583,541.0** and Total Call OI at **3,011,098.0**.",
-    "The **0.858** overall PCR indicates **neutral** sentiment, while the intraday chart shows NIFTY50's **consolidation**, accompanied by the intraday PCR **declining from its morning peak**.",
-    "The market is expected to face strong resistance at the 27000.0 strike with a Call OI of 283910.0, indicating a potential hurdle for the bulls.",
-    "On the downside, the 25500.0 strike with a Put OI of 184817.0 is likely to act as a strong support level, providing a cushion for the market."
+    "Current PCR is **1.1511** with Total Put OI at **4,174,984** and Total Call OI at **3,626,968**.",
+    "The **1.1511** overall PCR indicates **neutral** sentiment, while the intraday chart shows NIFTY50's **consolidation**, accompanied by the intraday PCR **rising from lows**.",
+    "The market is expected to face strong resistance at the 27100 strike with a Call OI of 266394, indicating a potential hurdle for the bulls.",
+    "On the downside, the 25900 strike with a Put OI of 298005 is likely to act as a strong support level, providing a cushion for the market."
   ],
   "oi_chart_data": [
     {
-      "strike": 24900.0,
-      "call_oi": 6338.0,
-      "put_oi": 48559.0
+      "strike": 25200,
+      "call_oi": 29705,
+      "put_oi": 197646
     },
     {
-      "strike": 25000.0,
-      "call_oi": 12739.0,
-      "put_oi": 156288.0
+      "strike": 25300,
+      "call_oi": 80617,
+      "put_oi": 200513
     },
     {
-      "strike": 25100.0,
-      "call_oi": 11930.0,
-      "put_oi": 76852.0
+      "strike": 25400,
+      "call_oi": 78255,
+      "put_oi": 267193
     },
     {
-      "strike": 25200.0,
-      "call_oi": 8043.0,
-      "put_oi": 80230.0
+      "strike": 25500,
+      "call_oi": 63900,
+      "put_oi": 284790
     },
     {
-      "strike": 25300.0,
-      "call_oi": 11921.0,
-      "put_oi": 79444.0
+      "strike": 25600,
+      "call_oi": 88111,
+      "put_oi": 258796
     },
     {
-      "strike": 25400.0,
-      "call_oi": 12042.0,
-      "put_oi": 106968.0
+      "strike": 25700,
+      "call_oi": 47095,
+      "put_oi": 192507
     },
     {
-      "strike": 25500.0,
-      "call_oi": 46797.0,
-      "put_oi": 184817.0
+      "strike": 25800,
+      "call_oi": 29410,
+      "put_oi": 165303
     },
     {
-      "strike": 25600.0,
-      "call_oi": 83677.0,
-      "put_oi": 154762.0
+      "strike": 25900,
+      "call_oi": 33820,
+      "put_oi": 298005
     },
     {
-      "strike": 25700.0,
-      "call_oi": 147109.0,
-      "put_oi": 77958.0
+      "strike": 26000,
+      "call_oi": 250657,
+      "put_oi": 27199
     },
     {
-      "strike": 25800.0,
-      "call_oi": 168838.0,
-      "put_oi": 52272.0
+      "strike": 26100,
+      "call_oi": 152751,
+      "put_oi": 73618
     },
     {
-      "strike": 25900.0,
-      "call_oi": 104194.0,
-      "put_oi": 8561.0
+      "strike": 26200,
+      "call_oi": 216387,
+      "put_oi": 28467
     },
     {
-      "strike": 26000.0,
-      "call_oi": 222476.0,
-      "put_oi": 20702.0
+      "strike": 26300,
+      "call_oi": 172837,
+      "put_oi": 44440
     },
     {
-      "strike": 26100.0,
-      "call_oi": 85104.0,
-      "put_oi": 4501.0
+      "strike": 26400,
+      "call_oi": 116498,
+      "put_oi": 76626
     },
     {
-      "strike": 26200.0,
-      "call_oi": 98567.0,
-      "put_oi": 4763.0
+      "strike": 26500,
+      "call_oi": 102858,
+      "put_oi": 22088
     },
     {
-      "strike": 26300.0,
-      "call_oi": 106797.0,
-      "put_oi": 2120.0
+      "strike": 26600,
+      "call_oi": 183576,
+      "put_oi": 66411
     },
     {
-      "strike": 26400.0,
-      "call_oi": 63992.0,
-      "put_oi": 687.0
+      "strike": 26700,
+      "call_oi": 254675,
+      "put_oi": 29138
     },
     {
-      "strike": 26500.0,
-      "call_oi": 147403.0,
-      "put_oi": 5840.0
+      "strike": 26800,
+      "call_oi": 122450,
+      "put_oi": 82414
     }
   ],
   "pcr_trend_data": [
-    {
-      "time": "19:31:09",
-      "pcr": 0.5898,
-      "spot": 25048.65
-    },
-    {
-      "time": "21:59:56",
-      "pcr": 0.5898,
-      "spot": 25048.65
-    },
-    {
-      "time": "07:00:59",
-      "pcr": 0.5898,
-      "spot": 25048.65
-    },
-    {
-      "time": "15:30:00",
-      "pcr": 0.5898,
-      "spot": 25048.65
-    },
     {
       "time": "15:30:00",
       "pcr": 0.5898,
@@ -201,6 +181,26 @@
       "time": "15:30:00",
       "pcr": 0.858,
       "spot": 25693.7
+    },
+    {
+      "time": "10:41:01",
+      "pcr": 1.0079,
+      "spot": 25979.6
+    },
+    {
+      "time": "10:45:33",
+      "pcr": 0.9665,
+      "spot": 25974.25
+    },
+    {
+      "time": "10:53:14",
+      "pcr": 1.0701,
+      "spot": 25975.1
+    },
+    {
+      "time": "11:08:28",
+      "pcr": 1.1511,
+      "spot": 25968.05
     }
   ]
 }

@@ -1,7 +1,7 @@
-Current Value: 11.94
-Change: -0.23
-# Source: Yahoo Finance
+Current Value: 11.42
+Change: +0.00
+# Source: NSE Official
 # Confidence: HIGH
-# Timestamp: 2026-02-06 00:00:00+05:30
+# Timestamp: 2026-02-11 11:06:47.224499
 # Validated: True
-# Sources: 2
+# Sources: 1
