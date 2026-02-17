@@ -332,6 +332,23 @@ class PDFReportGenerator:
 def main():
     """Main entry point for standalone execution"""
     import argparse
+    from datetime import datetime
+    import pytz
+    
+    # Log execution time for monitoring
+    ist = pytz.timezone('Asia/Kolkata')
+    utc = pytz.timezone('UTC')
+    
+    now_utc = datetime.now(utc)
+    now_ist = datetime.now(ist)
+    
+    print("\n" + "="*60)
+    print("📅 EXECUTION TIMESTAMP")
+    print("="*60)
+    print(f"UTC Time: {now_utc.strftime('%Y-%m-%d %H:%M:%S %Z')}")
+    print(f"IST Time: {now_ist.strftime('%Y-%m-%d %H:%M:%S %Z')}")
+    print(f"Target Schedule: 7:00 AM IST (Weekdays)")
+    print("="*60 + "\n")
     
     parser = argparse.ArgumentParser(description='Automated PDF Report Generator')
     parser.add_argument('--skip-server', action='store_true', 
