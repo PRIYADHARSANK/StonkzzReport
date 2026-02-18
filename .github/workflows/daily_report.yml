@@ -2,11 +2,11 @@ name: Daily StonkzzReport
 
 on:
   schedule:
-    # Adjusted to 01:15 UTC to buffer against GitHub Actions delays
-    # Target: 7:00 AM IST (01:30 UTC) with 15-minute buffer
-    # Actual execution window: 6:45 AM - 7:15 AM IST
-    # Runs Monday to Friday only (weekdays)
-    - cron: '15 1 * * 1-5'
+    # Adjusted to 23:00 UTC (4:30 AM IST next day)
+    # Target: 4:30 AM IST (23:00 UTC previous day)
+    # Runs Monday to Friday only (weekdays in IST)
+    # Note: Days 0-4 (Sun-Thu UTC) = Mon-Fri in IST due to timezone offset
+    - cron: '0 23 * * 0-4'
   workflow_dispatch:
     # Allow manual trigger for testing
 
@@ -27,7 +27,7 @@ jobs:
           echo "========================================="
           echo "UTC Time: $(date -u '+%Y-%m-%d %H:%M:%S %Z')"
           echo "IST Time: $(TZ='Asia/Kolkata' date '+%Y-%m-%d %H:%M:%S %Z')"
-          echo "Scheduled for: 07:00 AM IST (Monday-Friday)"
+          echo "Scheduled for: 04:30 AM IST (Monday-Friday)"
           echo "========================================="
 
       # 3. Setup Python 3.11
