@@ -2,11 +2,11 @@ name: Daily StonkzzReport
 
 on:
   schedule:
-    # Adjusted to 23:00 UTC (4:30 AM IST next day)
-    # Target: 4:30 AM IST (23:00 UTC previous day)
+    # Adjusted to 23:45 UTC (5:15 AM IST next day)
+    # Target: 5:15 AM IST (23:45 UTC previous day)
     # Runs Monday to Friday only (weekdays in IST)
     # Note: Days 0-4 (Sun-Thu UTC) = Mon-Fri in IST due to timezone offset
-    - cron: '0 23 * * 0-4'
+    - cron: '45 23 * * 0-4'
   workflow_dispatch:
     # Allow manual trigger for testing
 
@@ -27,7 +27,7 @@ jobs:
           echo "========================================="
           echo "UTC Time: $(date -u '+%Y-%m-%d %H:%M:%S %Z')"
           echo "IST Time: $(TZ='Asia/Kolkata' date '+%Y-%m-%d %H:%M:%S %Z')"
-          echo "Scheduled for: 04:30 AM IST (Monday-Friday)"
+          echo "Scheduled for: 05:15 AM IST (Monday-Friday)"
           echo "========================================="
 
       # 3. Setup Python 3.11
